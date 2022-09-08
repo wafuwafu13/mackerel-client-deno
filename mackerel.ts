@@ -12,6 +12,12 @@ type ClientType = {
   baseurl?: string;
 };
 
+type ErrorType = {
+  error: {
+    message: string;
+  };
+};
+
 // deno-lint-ignore no-namespace
 export namespace Mackerel {
   export class Client<T extends ClientType> {
@@ -34,17 +40,21 @@ export namespace Mackerel {
       return req;
     };
 
-    request = async (req: Request): Promise<Response> => {
+    request = async (req: Request): Promise<Response | Error> => {
       const request = this.buildReq(req);
       const resp = await fetch(request);
-      // TODO(wafuwafu13): Error Handling
-      return resp;
+      if (resp.ok) {
+        return resp;
+      } else {
+        const respj = await resp.json() as ErrorType;
+        return new Error(respj.error.message);
+      }
     };
 
     postJSON = (
       path: string,
       payload: Record<never | string, never | string | number>,
-    ): Promise<Response> => {
+    ): Promise<Response | Error> => {
       return this.requestJSON("POST", path, payload);
     };
 
@@ -52,7 +62,7 @@ export namespace Mackerel {
       method: "POST" | "PUT",
       path: string,
       payload: Record<never | string, never | string | number>,
-    ): Promise<Response> => {
+    ): Promise<Response | Error> => {
       const req = new Request(this.urlFor(path).toString(), {
         method,
         body: JSON.stringify(payload),
