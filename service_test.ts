@@ -1,5 +1,4 @@
-import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
-import { assertEquals } from "https://deno.land/std@0.154.0/testing/asserts.ts";
+import { assertEquals, mf } from "./deps.ts";
 import { Mackerel } from "./mackerel.ts";
 
 Deno.test("listServices", async () => {
