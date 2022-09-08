@@ -4,6 +4,8 @@
 
 mackerel-client-deno is a library for mackerel.io API working on Deno.
 
+<img src="https://user-images.githubusercontent.com/50798936/189112754-758afcb5-bd60-4e71-ae55-6f64f9e2a41a.png" width="500">
+
 ## Links
 
 - [Mackerel](https://en.mackerel.io/)
