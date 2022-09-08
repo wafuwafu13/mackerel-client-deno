@@ -1,4 +1,5 @@
 # mackerel-client-deno
+
 ![mackerel-client-deno](https://github.com/wafuwafu13/mackerel-client-deno/actions/workflows/ci.yaml/badge.svg?branch=main)
 
 mackerel-client-deno is a library for mackerel.io API working on Deno.
