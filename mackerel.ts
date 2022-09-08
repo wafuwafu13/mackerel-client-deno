@@ -1,4 +1,6 @@
-import { listServices } from "./service.ts";
+import { listServices, Service } from "./service.ts";
+
+export const defaultBaseURL = "https://api.mackerelio.com/";
 
 type ClientType = {
   apikey: string;
@@ -13,8 +15,25 @@ export namespace Mackerel {
       this.apikey = apikey;
     }
 
-    listServices() {
-      return listServices();
-    }
+    urlFor = (path: string): URL => {
+      const newURL = new URL(defaultBaseURL);
+      newURL.pathname = path;
+      return newURL;
+    };
+
+    buildReq = (req: Request): Request => {
+      req.headers.set("X-Api-Key", this.apikey);
+      return req;
+    };
+
+    request = async (req: Request): Promise<Response> => {
+      const request = this.buildReq(req);
+      const resp = await fetch(request);
+      return resp;
+    };
+
+    listServices = (): Promise<Service[]> => {
+      return listServices(this.urlFor, this.request);
+    };
   }
 }
