@@ -20,9 +20,8 @@ jobs:
       - name: Log versions
         run: |
           deno --version
-      - name: Lint & Format TS
+      - name: Format TS
         run: |
-          deno lint
           deno fmt --check
       - name: Test TS
         run: deno test -A
