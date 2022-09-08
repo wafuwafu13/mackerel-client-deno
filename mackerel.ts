@@ -1,8 +1,8 @@
-import { listServices } from './service.ts'
+import { listServices } from "./service.ts";
 
 type ClientType = {
   apikey: string;
-}
+};
 
 // deno-lint-ignore no-namespace
 export namespace Mackerel {
@@ -14,7 +14,7 @@ export namespace Mackerel {
     }
 
     listServices() {
-      return listServices()
+      return listServices();
     }
   }
 }

@@ -1,5 +1,5 @@
 export const listServices = () => {
   return new Promise((resolve) => {
-    resolve(["service1", "service2"])
-  })
-}
+    resolve(["service1", "service2"]);
+  });
+};
