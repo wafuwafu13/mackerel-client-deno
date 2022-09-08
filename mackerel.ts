@@ -17,6 +17,8 @@ type ErrorType = {
   error: {
     message: string;
   };
+} & {
+  error: string;
 };
 
 // deno-lint-ignore no-namespace
@@ -48,8 +50,11 @@ export namespace Mackerel {
         return resp;
       } else {
         const respj = await resp.json() as ErrorType;
-        // TODO: accept { error: string }
-        return new Error(respj.error.message);
+        if (respj.error.message) {
+          return new Error(respj.error.message);
+        } else {
+          return new Error(respj.error);
+        }
       }
     };
 
