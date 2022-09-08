@@ -1,4 +1,9 @@
-import { listServices, Service } from "./service.ts";
+import {
+  listServices,
+  registerService,
+  RegisterServiceParam,
+  Service,
+} from "./service.ts";
 
 export const defaultBaseURL = "https://api.mackerelio.com/";
 
@@ -32,11 +37,36 @@ export namespace Mackerel {
     request = async (req: Request): Promise<Response> => {
       const request = this.buildReq(req);
       const resp = await fetch(request);
+      // TODO(wafuwafu13): Error Handling
       return resp;
+    };
+
+    postJSON = (
+      path: string,
+      payload: Record<never | string, never | string | number>,
+    ): Promise<Response> => {
+      return this.requestJSON("POST", path, payload);
+    };
+
+    requestJSON = (
+      method: "POST" | "PUT",
+      path: string,
+      payload: Record<never | string, never | string | number>,
+    ): Promise<Response> => {
+      const req = new Request(this.urlFor(path).toString(), {
+        method,
+        body: JSON.stringify(payload),
+      });
+      req.headers.set("Content-Type", "application/json");
+      return this.request(req);
     };
 
     listServices = (): Promise<Service[]> => {
       return listServices(this.urlFor, this.request);
+    };
+
+    registerService = (param: RegisterServiceParam): Promise<Service> => {
+      return registerService(param, this.postJSON);
     };
   }
 }

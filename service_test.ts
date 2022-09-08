@@ -1,6 +1,9 @@
 import { assertEquals, mf } from "./deps.ts";
 import { Mackerel } from "./mackerel.ts";
 
+const dummyApiKey = "dummy-apikey";
+const dummyBaseurl = "https://example.com/";
+
 Deno.test("listServices", async () => {
   mf.install();
   mf.mock("GET@/api/v0/services", (_req, _params) => {
@@ -18,9 +21,28 @@ Deno.test("listServices", async () => {
       { status: 200 },
     );
   });
-  const client = new Mackerel.Client("dummy-apikey", "https://example.com/");
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
   const resp = await client.listServices();
   assertEquals(resp[0].name, "test-service1");
   assertEquals(resp[1].roles[1], "test-role3");
+  mf.uninstall();
+});
+
+Deno.test("registerService", async () => {
+  mf.install();
+  mf.mock("POST@/api/v0/services", (_req, _params) => {
+    return new Response(
+      JSON.stringify({ name: "test-service1", memo: "this is 1", roles: [] }),
+      { status: 200 },
+    );
+  });
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
+  const resp = await client.registerService({
+    name: "test-service1",
+    memo: "this is 1",
+  });
+  assertEquals(resp.name, "test-service1");
+  assertEquals(resp.memo, "this is 1");
+  assertEquals(resp.roles, []);
   mf.uninstall();
 });
