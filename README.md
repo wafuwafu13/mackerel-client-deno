@@ -16,7 +16,7 @@ mackerel-client-deno is a library for mackerel.io API working on Deno.
 ```ts
 import { Mackerel } from "https://deno.land/x/mackerel_client_deno@v0.5.1/mackerel.ts";
 
-const client = new Mackerel.Client(<MACKELEL_API_KEY>);
+const client = new Mackerel.Client(<MACKEREL_API_KEY>);
 
 const service = await client.registerService({
   name: "example-service",
@@ -29,7 +29,7 @@ You can try:
 1. [Getting Started with Mackerel](https://mackerel.io/docs/entry/getting-started)
 2. [Getting Started with Deno](https://deno.land/manual@v1.25.1/introduction)
 3. Clone this repo
-4. Setting your API key(`MACKELEL_API_KEY`) at `./example/.env`
+4. Setting your API key(`MACKEREL_API_KEY`) at `./example/.env`
 5. `$ deno run -A ./example/service.ts`
 
 ## Contribute
