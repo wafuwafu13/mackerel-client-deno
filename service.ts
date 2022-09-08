@@ -38,3 +38,23 @@ export const registerService = async (
   const service = await resp.json() as Service;
   return service;
 };
+
+export const deleteService = async (
+  serviceName: string,
+  urlFor: (path: string) => URL,
+  req: (req: Request) => Promise<Response | Error>,
+): Promise<Service> => {
+  const request = new Request(
+    urlFor(`/api/v0/services/${serviceName}`).toString(),
+    {
+      method: "DELETE",
+    },
+  );
+  request.headers.set("Content-Type", "application/json");
+  const resp = await req(request);
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const service = await resp.json() as Service;
+  return service;
+};

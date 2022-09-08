@@ -1,4 +1,5 @@
 import {
+  deleteService,
   listServices,
   registerService,
   RegisterServiceParam,
@@ -47,6 +48,7 @@ export namespace Mackerel {
         return resp;
       } else {
         const respj = await resp.json() as ErrorType;
+        // TODO: accept { error: string }
         return new Error(respj.error.message);
       }
     };
@@ -77,6 +79,10 @@ export namespace Mackerel {
 
     registerService = (param: RegisterServiceParam): Promise<Service> => {
       return registerService(param, this.postJSON);
+    };
+
+    deleteService = (serviceName: string): Promise<Service> => {
+      return deleteService(serviceName, this.urlFor, this.request);
     };
   }
 }

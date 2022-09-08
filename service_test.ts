@@ -46,3 +46,23 @@ Deno.test("registerService", async () => {
   assertEquals(resp.roles, []);
   mf.uninstall();
 });
+
+Deno.test("deleteService", async () => {
+  mf.install();
+  mf.mock("DELETE@/api/v0/services", (_req, _params) => {
+    return new Response(
+      JSON.stringify({
+        name: "test-service1",
+        memo: "this is 1",
+        roles: ["test-role1"],
+      }),
+      { status: 200 },
+    );
+  });
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
+  const resp = await client.deleteService("test-service1");
+  assertEquals(resp.name, "test-service1");
+  assertEquals(resp.memo, "this is 1");
+  assertEquals(resp.roles, ["test-role1"]);
+  mf.uninstall();
+});
