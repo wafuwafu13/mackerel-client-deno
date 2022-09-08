@@ -18,7 +18,7 @@ Deno.test("listServices", async () => {
       { status: 200 },
     );
   });
-  const client = new Mackerel.Client("dummy-apikey");
+  const client = new Mackerel.Client("dummy-apikey", "https://example.com/");
   const resp = await client.listServices();
   assertEquals(resp[0].name, "test-service1");
   assertEquals(resp[1].roles[1], "test-role3");
