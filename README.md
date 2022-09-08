@@ -30,6 +30,20 @@ You can try:
 4. Setting your API key(`MACKELEL_API_KEY`) at `./example/.env`
 5. `$ deno run -A ./example/service.ts`
 
+## Contribute
+
+### [Help Wanted !](https://github.com/wafuwafu13/mackerel-client-deno/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+
+You can contribute:
+
+1. Fork (https://github.com/wafuwafu13/mackerel-client-deno/fork)
+2. Create a feature branch
+3. Commit your changes
+4. Rebase your local changes against the master branch
+5. Run test suite with the `deno test -A` and confirm that it passes
+6. Run `deno lint` and `deno fmt`
+7. Create new Pull Request
+
 ## LICENCE
 
 - wafuwafu13/mackerel-client-deno is licensed under the
