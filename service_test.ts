@@ -23,5 +23,5 @@ Deno.test("listServices", async () => {
   const resp = await client.listServices();
   assertEquals(resp[0].name, "test-service1");
   assertEquals(resp[1].roles[1], "test-role3");
-  mf.uninstall()
+  mf.uninstall();
 });
