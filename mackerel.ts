@@ -8,6 +8,7 @@ import {
 import {
   AWSIntegration,
   AWSIntegrationService,
+  deleteAwsIntegrationSettings,
   getAwsIntegrationSettings,
   listAwsIntegrationSettings,
   RegisterAWSIntegrationParam,
@@ -140,6 +141,16 @@ export namespace Mackerel {
         awsIntegrationID,
         param,
         this.putJSON,
+      );
+    };
+
+    deleteAwsIntegrationSettings = (
+      awsIntegrationID: string,
+    ): Promise<AWSIntegration> => {
+      return deleteAwsIntegrationSettings(
+        awsIntegrationID,
+        this.urlFor,
+        this.request,
       );
     };
   }

@@ -82,7 +82,7 @@ export const registerAwsIntegrationSettings = async (
     path: string,
     payload: PayloadType,
   ) => Promise<Response | Error>,
-) => {
+): Promise<AWSIntegration> => {
   const resp = await postJSON("/api/v0/aws-integrations", param);
   if (resp instanceof Error) {
     throw resp;
@@ -98,11 +98,31 @@ export const updateAwsIntegrationSettings = async (
     path: string,
     payload: PayloadType,
   ) => Promise<Response | Error>,
-) => {
+): Promise<AWSIntegration> => {
   const resp = await putJSON(
     `/api/v0/aws-integrations/${awsIntegrationID}`,
     param,
   );
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const awsIntegration = await resp.json() as AWSIntegration;
+  return awsIntegration;
+};
+
+export const deleteAwsIntegrationSettings = async (
+  awsIntegrationID: string,
+  urlFor: (path: string) => URL,
+  req: (req: Request) => Promise<Response | Error>,
+): Promise<AWSIntegration> => {
+  const request = new Request(
+    urlFor(`/api/v0/aws-integrations/${awsIntegrationID}`).toString(),
+    {
+      method: "DELETE",
+    },
+  );
+  request.headers.set("Content-Type", "application/json");
+  const resp = await req(request);
   if (resp instanceof Error) {
     throw resp;
   }

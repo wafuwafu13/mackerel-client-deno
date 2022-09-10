@@ -177,3 +177,42 @@ Deno.test("updateAwsIntegrationSettings", async () => {
   assertEquals(resp.services["ALB"].enable, true);
   mf.uninstall();
 });
+
+Deno.test("deleteAwsIntegrationSettings", async () => {
+  const awsIntegrationID = "testid";
+  mf.install();
+  mf.mock(
+    `DELETE@/api/v0/aws-integrations/${awsIntegrationID}`,
+    (_req, _params) => {
+      return new Response(
+        JSON.stringify(
+          {
+            id: awsIntegrationID,
+            name: "test-aws-integration",
+            memo: "this is test",
+            key: null,
+            roleArn: "test-rolearn",
+            externalID: "test-externalid",
+            region: "test-region",
+            includedTags: "",
+            excludedTags: "",
+            services: {
+              "EC2": {
+                enable: false,
+                role: null,
+                retireAutomatically: false,
+                excludedMetrics: [],
+              },
+            },
+          },
+        ),
+        { status: 200 },
+      );
+    },
+  );
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
+  const resp = await client.deleteAwsIntegrationSettings(awsIntegrationID);
+  assertEquals(resp.id, awsIntegrationID);
+  assertEquals(resp.services["EC2"].retireAutomatically, false);
+  mf.uninstall();
+});
