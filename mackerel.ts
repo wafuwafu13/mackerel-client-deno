@@ -7,8 +7,11 @@ import {
 } from "./service.ts";
 import {
   AWSIntegration,
+  AWSIntegrationService,
   getAwsIntegrationSettings,
   listAwsIntegrationSettings,
+  RegisterAWSIntegrationParam,
+  registerAwsIntegrationSettings,
 } from "./awsintegrations.ts";
 
 export const defaultBaseURL = "https://api.mackerelio.com/";
@@ -25,6 +28,11 @@ type ErrorType = {
 } & {
   error: string;
 };
+
+export type PayloadType = Record<
+  never | string,
+  never | string | number | null | Record<string, AWSIntegrationService>
+>;
 
 // deno-lint-ignore no-namespace
 export namespace Mackerel {
@@ -65,7 +73,7 @@ export namespace Mackerel {
 
     postJSON = (
       path: string,
-      payload: Record<never | string, never | string | number>,
+      payload: PayloadType,
     ): Promise<Response | Error> => {
       return this.requestJSON("POST", path, payload);
     };
@@ -73,7 +81,7 @@ export namespace Mackerel {
     requestJSON = (
       method: "POST" | "PUT",
       path: string,
-      payload: Record<never | string, never | string | number>,
+      payload: PayloadType,
     ): Promise<Response | Error> => {
       const req = new Request(this.urlFor(path).toString(), {
         method,
@@ -99,12 +107,20 @@ export namespace Mackerel {
       return listAwsIntegrationSettings(this.urlFor, this.request);
     };
 
-    getAwsIntegrationSettings = (awsIntegrationID: string) => {
+    getAwsIntegrationSettings = (
+      awsIntegrationID: string,
+    ): Promise<AWSIntegration> => {
       return getAwsIntegrationSettings(
         awsIntegrationID,
         this.urlFor,
         this.request,
       );
+    };
+
+    registerAwsIntegrationSettings = (
+      param: RegisterAWSIntegrationParam,
+    ): Promise<AWSIntegration> => {
+      return registerAwsIntegrationSettings(param, this.postJSON);
     };
   }
 }

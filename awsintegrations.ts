@@ -1,3 +1,5 @@
+import { PayloadType } from "./mackerel.ts";
+
 export type AWSIntegration = {
   id: string;
   name: string;
@@ -11,11 +13,24 @@ export type AWSIntegration = {
   services: Record<string, AWSIntegrationService>;
 };
 
-type AWSIntegrationService = {
+export type AWSIntegrationService = {
   enable: boolean;
   role: string | null;
-  excludeMetrics: string[];
+  excludedMetrics: string[];
   retireAutomatically?: boolean;
+};
+
+export type RegisterAWSIntegrationParam = {
+  name: string;
+  memo: string;
+  key: string | null;
+  secretKey: string | null;
+  roleArn: string | null;
+  externalId: string | null;
+  region: string;
+  includedTags: string;
+  excludedTags: string;
+  services: Record<string, AWSIntegrationService>;
 };
 
 export const listAwsIntegrationSettings = async (
@@ -50,6 +65,21 @@ export const getAwsIntegrationSettings = async (
   if (resp instanceof Error) {
     throw resp;
   }
-  const awsIntegrations = await resp.json() as AWSIntegration;
-  return awsIntegrations;
+  const awsIntegration = await resp.json() as AWSIntegration;
+  return awsIntegration;
+};
+
+export const registerAwsIntegrationSettings = async (
+  param: RegisterAWSIntegrationParam,
+  postJSON: (
+    path: string,
+    payload: PayloadType,
+  ) => Promise<Response | Error>,
+) => {
+  const resp = await postJSON("/api/v0/aws-integrations", param);
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const awsIntegration = await resp.json() as AWSIntegration;
+  return awsIntegration;
 };

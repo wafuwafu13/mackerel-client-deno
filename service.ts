@@ -1,3 +1,5 @@
+import { PayloadType } from "./mackerel.ts";
+
 export type Service = {
   name: string;
   memo: string;
@@ -28,7 +30,7 @@ export const registerService = async (
   param: RegisterServiceParam,
   postJSON: (
     path: string,
-    payload: Record<never | string, never | string | number>,
+    payload: PayloadType,
   ) => Promise<Response | Error>,
 ): Promise<Service> => {
   const resp = await postJSON("/api/v0/services", param);
