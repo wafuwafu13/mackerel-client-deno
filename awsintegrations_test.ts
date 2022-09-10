@@ -1,6 +1,9 @@
 import { assertEquals, mf } from "./deps.ts";
 import { Mackerel } from "./mackerel.ts";
-import { RegisterAWSIntegrationParam } from "./awsintegrations.ts";
+import {
+  RegisterAWSIntegrationParam,
+  UpdateAWSIntegrationParam,
+} from "./awsintegrations.ts";
 
 const dummyApiKey = "dummy-apikey";
 const dummyBaseurl = "https://example.com/";
@@ -122,5 +125,55 @@ Deno.test("registerAwsIntegrationSettings", async () => {
   const resp = await client.registerAwsIntegrationSettings(registerParam);
   assertEquals(resp.id, "testid");
   assertEquals(resp.services["S3"].enable, true);
+  mf.uninstall();
+});
+
+Deno.test("updateAwsIntegrationSettings", async () => {
+  const awsIntegrationID = "testid";
+  const updateParam: UpdateAWSIntegrationParam = {
+    name: "test-aws-integration-change",
+    memo: "this is test changed",
+    region: "test-region",
+    includedTags: "",
+    excludedTags: "",
+    services: {
+      "S3": {
+        enable: true,
+        role: null,
+        excludedMetrics: [],
+      },
+      "ALB": {
+        enable: true,
+        role: null,
+        excludedMetrics: [],
+      },
+    },
+  };
+  mf.install();
+  mf.mock(
+    `PUT@/api/v0/aws-integrations/${awsIntegrationID}`,
+    (_req, _params) => {
+      const resp = {
+        id: awsIntegrationID,
+        key: null,
+        roleArn: "testRoleArn",
+        externalId: "testexternalid",
+        ...updateParam,
+      };
+      return new Response(
+        JSON.stringify(
+          resp,
+        ),
+        { status: 200 },
+      );
+    },
+  );
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
+  const resp = await client.updateAwsIntegrationSettings(
+    awsIntegrationID,
+    updateParam,
+  );
+  assertEquals(resp.id, "testid");
+  assertEquals(resp.services["ALB"].enable, true);
   mf.uninstall();
 });

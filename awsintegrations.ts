@@ -33,6 +33,13 @@ export type RegisterAWSIntegrationParam = {
   services: Record<string, AWSIntegrationService>;
 };
 
+export type UpdateAWSIntegrationParam =
+  & Partial<RegisterAWSIntegrationParam>
+  & Pick<
+    RegisterAWSIntegrationParam,
+    "name" | "memo" | "region" | "includedTags" | "excludedTags" | "services"
+  >;
+
 export const listAwsIntegrationSettings = async (
   urlFor: (path: string) => URL,
   req: (req: Request) => Promise<Response | Error>,
@@ -77,6 +84,25 @@ export const registerAwsIntegrationSettings = async (
   ) => Promise<Response | Error>,
 ) => {
   const resp = await postJSON("/api/v0/aws-integrations", param);
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const awsIntegration = await resp.json() as AWSIntegration;
+  return awsIntegration;
+};
+
+export const updateAwsIntegrationSettings = async (
+  awsIntegrationID: string,
+  param: UpdateAWSIntegrationParam,
+  putJSON: (
+    path: string,
+    payload: PayloadType,
+  ) => Promise<Response | Error>,
+) => {
+  const resp = await putJSON(
+    `/api/v0/aws-integrations/${awsIntegrationID}`,
+    param,
+  );
   if (resp instanceof Error) {
     throw resp;
   }

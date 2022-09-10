@@ -12,6 +12,8 @@ import {
   listAwsIntegrationSettings,
   RegisterAWSIntegrationParam,
   registerAwsIntegrationSettings,
+  UpdateAWSIntegrationParam,
+  updateAwsIntegrationSettings,
 } from "./awsintegrations.ts";
 
 export const defaultBaseURL = "https://api.mackerelio.com/";
@@ -78,6 +80,13 @@ export namespace Mackerel {
       return this.requestJSON("POST", path, payload);
     };
 
+    putJSON = (
+      path: string,
+      payload: PayloadType,
+    ): Promise<Response | Error> => {
+      return this.requestJSON("PUT", path, payload);
+    };
+
     requestJSON = (
       method: "POST" | "PUT",
       path: string,
@@ -121,6 +130,17 @@ export namespace Mackerel {
       param: RegisterAWSIntegrationParam,
     ): Promise<AWSIntegration> => {
       return registerAwsIntegrationSettings(param, this.postJSON);
+    };
+
+    updateAwsIntegrationSettings = (
+      awsIntegrationID: string,
+      param: UpdateAWSIntegrationParam,
+    ): Promise<AWSIntegration> => {
+      return updateAwsIntegrationSettings(
+        awsIntegrationID,
+        param,
+        this.putJSON,
+      );
     };
   }
 }
