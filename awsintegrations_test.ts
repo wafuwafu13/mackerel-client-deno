@@ -235,3 +235,22 @@ Deno.test("generateAwsIntegrationExternalID", async () => {
   assertEquals(resp, "testexternalid");
   mf.uninstall();
 });
+
+Deno.test("listExcludableMetricsForAwsIntegration", async () => {
+  mf.install();
+  mf.mock(
+    "GET@/api/v0/aws-integrations-excludable-metrics",
+    (_req, _params) => {
+      return new Response(
+        JSON.stringify(
+          { EC2: ["testmetrics1"], ELB: ["testmetrics2", "testmetrics2"] },
+        ),
+        { status: 200 },
+      );
+    },
+  );
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
+  const resp = await client.listExcludableMetricsForAwsIntegration();
+  assertEquals(resp["ELB"][1], "testmetrics2");
+  mf.uninstall();
+});

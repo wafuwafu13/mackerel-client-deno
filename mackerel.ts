@@ -11,7 +11,9 @@ import {
   deleteAwsIntegrationSettings,
   generateAwsIntegrationExternalID,
   getAwsIntegrationSettings,
+  ListAWSIntegrationExcludableMetrics,
   listAwsIntegrationSettings,
+  listExcludableMetricsForAwsIntegration,
   RegisterAWSIntegrationParam,
   registerAwsIntegrationSettings,
   UpdateAWSIntegrationParam,
@@ -159,6 +161,12 @@ export namespace Mackerel {
 
     generateAwsIntegrationExternalID = (): Promise<string> => {
       return generateAwsIntegrationExternalID(this.postJSON);
+    };
+
+    listExcludableMetricsForAwsIntegration = (): Promise<
+      ListAWSIntegrationExcludableMetrics
+    > => {
+      return listExcludableMetricsForAwsIntegration(this.urlFor, this.request);
     };
   }
 }

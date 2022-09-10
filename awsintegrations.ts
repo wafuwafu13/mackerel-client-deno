@@ -40,6 +40,8 @@ export type UpdateAWSIntegrationParam =
     "name" | "memo" | "region" | "includedTags" | "excludedTags" | "services"
   >;
 
+export type ListAWSIntegrationExcludableMetrics = Record<string, string[]>;
+
 export const listAwsIntegrationSettings = async (
   urlFor: (path: string) => URL,
   req: (req: Request) => Promise<Response | Error>,
@@ -142,4 +144,23 @@ export const generateAwsIntegrationExternalID = async (
   }
   const externalId = await resp.json() as { externalId: string };
   return externalId["externalId"];
+};
+
+export const listExcludableMetricsForAwsIntegration = async (
+  urlFor: (path: string) => URL,
+  req: (req: Request) => Promise<Response | Error>,
+): Promise<ListAWSIntegrationExcludableMetrics> => {
+  const request = new Request(
+    urlFor("/api/v0/aws-integrations-excludable-metrics").toString(),
+    {
+      method: "GET",
+    },
+  );
+  const resp = await req(request);
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const awsIntegrationExcludableMetrics = await resp
+    .json() as ListAWSIntegrationExcludableMetrics;
+  return awsIntegrationExcludableMetrics;
 };
