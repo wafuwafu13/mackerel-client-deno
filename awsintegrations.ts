@@ -129,3 +129,17 @@ export const deleteAwsIntegrationSettings = async (
   const awsIntegration = await resp.json() as AWSIntegration;
   return awsIntegration;
 };
+
+export const generateAwsIntegrationExternalID = async (
+  postJSON: (
+    path: string,
+    payload: PayloadType,
+  ) => Promise<Response | Error>,
+): Promise<string> => {
+  const resp = await postJSON("/api/v0/aws-integrations-external-id", null);
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const externalId = await resp.json() as { externalId: string };
+  return externalId["externalId"];
+};

@@ -9,6 +9,7 @@ import {
   AWSIntegration,
   AWSIntegrationService,
   deleteAwsIntegrationSettings,
+  generateAwsIntegrationExternalID,
   getAwsIntegrationSettings,
   listAwsIntegrationSettings,
   RegisterAWSIntegrationParam,
@@ -32,10 +33,12 @@ type ErrorType = {
   error: string;
 };
 
-export type PayloadType = Record<
-  never | string,
-  never | string | number | null | Record<string, AWSIntegrationService>
->;
+export type PayloadType =
+  | Record<
+    never | string,
+    never | string | number | null | Record<string, AWSIntegrationService>
+  >
+  | null;
 
 // deno-lint-ignore no-namespace
 export namespace Mackerel {
@@ -152,6 +155,10 @@ export namespace Mackerel {
         this.urlFor,
         this.request,
       );
+    };
+
+    generateAwsIntegrationExternalID = (): Promise<string> => {
+      return generateAwsIntegrationExternalID(this.postJSON);
     };
   }
 }

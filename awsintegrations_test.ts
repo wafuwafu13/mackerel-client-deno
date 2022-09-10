@@ -216,3 +216,22 @@ Deno.test("deleteAwsIntegrationSettings", async () => {
   assertEquals(resp.services["EC2"].retireAutomatically, false);
   mf.uninstall();
 });
+
+Deno.test("generateAwsIntegrationExternalID", async () => {
+  mf.install();
+  mf.mock(
+    "POST@/api/v0/aws-integrations-external-id",
+    (_req, _params) => {
+      return new Response(
+        JSON.stringify(
+          { externalId: "testexternalid" },
+        ),
+        { status: 200 },
+      );
+    },
+  );
+  const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
+  const resp = await client.generateAwsIntegrationExternalID();
+  assertEquals(resp, "testexternalid");
+  mf.uninstall();
+});
