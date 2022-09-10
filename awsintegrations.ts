@@ -34,3 +34,22 @@ export const listAwsIntegrationSettings = async (
   };
   return awsIntegrations["aws_integrations"];
 };
+
+export const getAwsIntegrationSettings = async (
+  awsIntegrationID: string,
+  urlFor: (path: string) => URL,
+  req: (req: Request) => Promise<Response | Error>,
+): Promise<AWSIntegration> => {
+  const request = new Request(
+    urlFor(`/api/v0/aws-integrations/${awsIntegrationID}`).toString(),
+    {
+      method: "GET",
+    },
+  );
+  const resp = await req(request);
+  if (resp instanceof Error) {
+    throw resp;
+  }
+  const awsIntegrations = await resp.json() as AWSIntegration;
+  return awsIntegrations;
+};

@@ -7,6 +7,7 @@ import {
 } from "./service.ts";
 import {
   AWSIntegration,
+  getAwsIntegrationSettings,
   listAwsIntegrationSettings,
 } from "./awsintegrations.ts";
 
@@ -96,6 +97,14 @@ export namespace Mackerel {
 
     listAwsIntegrationSettings = (): Promise<AWSIntegration[]> => {
       return listAwsIntegrationSettings(this.urlFor, this.request);
+    };
+
+    getAwsIntegrationSettings = (awsIntegrationID: string) => {
+      return getAwsIntegrationSettings(
+        awsIntegrationID,
+        this.urlFor,
+        this.request,
+      );
     };
   }
 }
