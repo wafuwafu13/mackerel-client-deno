@@ -41,7 +41,7 @@ Deno.test("listAwsIntegrationSettings", async () => {
   const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
   const resp = await client.listAwsIntegrationSettings();
   assertEquals(resp[0].name, "test-aws-integration");
-  assertEquals(resp[0].services["EC2"].retireAutomatically, false);
+  assertEquals(resp[0].services["EC2"]!.retireAutomatically, false);
   mf.uninstall();
 });
 
@@ -80,7 +80,7 @@ Deno.test("getAwsIntegrationSettings", async () => {
   const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
   const resp = await client.getAwsIntegrationSettings(awsIntegrationID);
   assertEquals(resp.id, awsIntegrationID);
-  assertEquals(resp.services["EC2"].retireAutomatically, false);
+  assertEquals(resp.services["EC2"]!.retireAutomatically, false);
   mf.uninstall();
 });
 
@@ -124,7 +124,7 @@ Deno.test("registerAwsIntegrationSettings", async () => {
   const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
   const resp = await client.registerAwsIntegrationSettings(registerParam);
   assertEquals(resp.id, "testid");
-  assertEquals(resp.services["S3"].enable, true);
+  assertEquals(resp.services["S3"]!.enable, true);
   mf.uninstall();
 });
 
@@ -174,7 +174,7 @@ Deno.test("updateAwsIntegrationSettings", async () => {
     updateParam,
   );
   assertEquals(resp.id, "testid");
-  assertEquals(resp.services["ALB"].enable, true);
+  assertEquals(resp.services["ALB"]!.enable, true);
   mf.uninstall();
 });
 
@@ -213,7 +213,7 @@ Deno.test("deleteAwsIntegrationSettings", async () => {
   const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
   const resp = await client.deleteAwsIntegrationSettings(awsIntegrationID);
   assertEquals(resp.id, awsIntegrationID);
-  assertEquals(resp.services["EC2"].retireAutomatically, false);
+  assertEquals(resp.services["EC2"]!.retireAutomatically, false);
   mf.uninstall();
 });
 
@@ -251,6 +251,6 @@ Deno.test("listExcludableMetricsForAwsIntegration", async () => {
   );
   const client = new Mackerel.Client(dummyApiKey, dummyBaseurl);
   const resp = await client.listExcludableMetricsForAwsIntegration();
-  assertEquals(resp["ELB"][1], "testmetrics2");
+  assertEquals(resp["ELB"]![1], "testmetrics2");
   mf.uninstall();
 });

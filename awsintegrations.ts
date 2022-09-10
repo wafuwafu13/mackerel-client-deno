@@ -1,5 +1,48 @@
 import { PayloadType } from "./mackerel.ts";
 
+const awsServices = [
+  "EC2",
+  "ELB",
+  "ALB",
+  "RDS",
+  "Redshift",
+  "ElastiCache",
+  "SQS",
+  "Lambda",
+  "NLB",
+  "DynamoDB",
+  "CloudFront",
+  "APIGateway",
+  "Kinesis",
+  "S3",
+  "ES",
+  "ECSCluster",
+  "SES",
+  "States",
+  "EFS",
+  "Firehose",
+  "Batch",
+  "WAF",
+  "Billing",
+  "Route53",
+  "Connect",
+  "DocDB",
+  "CodeBuild",
+] as const;
+
+type AWSService = typeof awsServices[number];
+
+type AWSIntegrationService = {
+  enable: boolean;
+  role: string | null;
+  excludedMetrics: string[];
+  retireAutomatically?: boolean;
+};
+
+export type AWSIntegrationServices = {
+  [S in AWSService]?: AWSIntegrationService;
+};
+
 export type AWSIntegration = {
   id: string;
   name: string;
@@ -10,14 +53,7 @@ export type AWSIntegration = {
   region: string;
   includedTags: string;
   excludedTags: string;
-  services: Record<string, AWSIntegrationService>;
-};
-
-export type AWSIntegrationService = {
-  enable: boolean;
-  role: string | null;
-  excludedMetrics: string[];
-  retireAutomatically?: boolean;
+  services: AWSIntegrationServices;
 };
 
 export type RegisterAWSIntegrationParam = {
@@ -30,7 +66,7 @@ export type RegisterAWSIntegrationParam = {
   region: string;
   includedTags: string;
   excludedTags: string;
-  services: Record<string, AWSIntegrationService>;
+  services: AWSIntegrationServices;
 };
 
 export type UpdateAWSIntegrationParam =
@@ -40,7 +76,9 @@ export type UpdateAWSIntegrationParam =
     "name" | "memo" | "region" | "includedTags" | "excludedTags" | "services"
   >;
 
-export type ListAWSIntegrationExcludableMetrics = Record<string, string[]>;
+export type ListAWSIntegrationExcludableMetrics = {
+  [S in AWSService]?: string[];
+};
 
 export const listAwsIntegrationSettings = async (
   urlFor: (path: string) => URL,

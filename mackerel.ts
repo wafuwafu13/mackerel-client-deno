@@ -7,7 +7,7 @@ import {
 } from "./service.ts";
 import {
   AWSIntegration,
-  AWSIntegrationService,
+  AWSIntegrationServices,
   deleteAwsIntegrationSettings,
   generateAwsIntegrationExternalID,
   getAwsIntegrationSettings,
@@ -38,7 +38,7 @@ type ErrorType = {
 export type PayloadType =
   | Record<
     never | string,
-    never | string | number | null | Record<string, AWSIntegrationService>
+    never | string | number | null | AWSIntegrationServices
   >
   | null;
 
