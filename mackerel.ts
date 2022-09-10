@@ -5,6 +5,10 @@ import {
   RegisterServiceParam,
   Service,
 } from "./service.ts";
+import {
+  AWSIntegration,
+  listAwsIntegrationSettings,
+} from "./awsintegrations.ts";
 
 export const defaultBaseURL = "https://api.mackerelio.com/";
 
@@ -88,6 +92,10 @@ export namespace Mackerel {
 
     deleteService = (serviceName: string): Promise<Service> => {
       return deleteService(serviceName, this.urlFor, this.request);
+    };
+
+    listAwsIntegrationSettings = (): Promise<AWSIntegration[]> => {
+      return listAwsIntegrationSettings(this.urlFor, this.request);
     };
   }
 }
