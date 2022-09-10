@@ -5,6 +5,20 @@ import {
   RegisterServiceParam,
   Service,
 } from "./service.ts";
+import {
+  AWSIntegration,
+  AWSIntegrationService,
+  deleteAwsIntegrationSettings,
+  generateAwsIntegrationExternalID,
+  getAwsIntegrationSettings,
+  ListAWSIntegrationExcludableMetrics,
+  listAwsIntegrationSettings,
+  listExcludableMetricsForAwsIntegration,
+  RegisterAWSIntegrationParam,
+  registerAwsIntegrationSettings,
+  UpdateAWSIntegrationParam,
+  updateAwsIntegrationSettings,
+} from "./awsintegrations.ts";
 
 export const defaultBaseURL = "https://api.mackerelio.com/";
 
@@ -20,6 +34,13 @@ type ErrorType = {
 } & {
   error: string;
 };
+
+export type PayloadType =
+  | Record<
+    never | string,
+    never | string | number | null | Record<string, AWSIntegrationService>
+  >
+  | null;
 
 // deno-lint-ignore no-namespace
 export namespace Mackerel {
@@ -60,15 +81,22 @@ export namespace Mackerel {
 
     postJSON = (
       path: string,
-      payload: Record<never | string, never | string | number>,
+      payload: PayloadType,
     ): Promise<Response | Error> => {
       return this.requestJSON("POST", path, payload);
+    };
+
+    putJSON = (
+      path: string,
+      payload: PayloadType,
+    ): Promise<Response | Error> => {
+      return this.requestJSON("PUT", path, payload);
     };
 
     requestJSON = (
       method: "POST" | "PUT",
       path: string,
-      payload: Record<never | string, never | string | number>,
+      payload: PayloadType,
     ): Promise<Response | Error> => {
       const req = new Request(this.urlFor(path).toString(), {
         method,
@@ -88,6 +116,57 @@ export namespace Mackerel {
 
     deleteService = (serviceName: string): Promise<Service> => {
       return deleteService(serviceName, this.urlFor, this.request);
+    };
+
+    listAwsIntegrationSettings = (): Promise<AWSIntegration[]> => {
+      return listAwsIntegrationSettings(this.urlFor, this.request);
+    };
+
+    getAwsIntegrationSettings = (
+      awsIntegrationID: string,
+    ): Promise<AWSIntegration> => {
+      return getAwsIntegrationSettings(
+        awsIntegrationID,
+        this.urlFor,
+        this.request,
+      );
+    };
+
+    registerAwsIntegrationSettings = (
+      param: RegisterAWSIntegrationParam,
+    ): Promise<AWSIntegration> => {
+      return registerAwsIntegrationSettings(param, this.postJSON);
+    };
+
+    updateAwsIntegrationSettings = (
+      awsIntegrationID: string,
+      param: UpdateAWSIntegrationParam,
+    ): Promise<AWSIntegration> => {
+      return updateAwsIntegrationSettings(
+        awsIntegrationID,
+        param,
+        this.putJSON,
+      );
+    };
+
+    deleteAwsIntegrationSettings = (
+      awsIntegrationID: string,
+    ): Promise<AWSIntegration> => {
+      return deleteAwsIntegrationSettings(
+        awsIntegrationID,
+        this.urlFor,
+        this.request,
+      );
+    };
+
+    generateAwsIntegrationExternalID = (): Promise<string> => {
+      return generateAwsIntegrationExternalID(this.postJSON);
+    };
+
+    listExcludableMetricsForAwsIntegration = (): Promise<
+      ListAWSIntegrationExcludableMetrics
+    > => {
+      return listExcludableMetricsForAwsIntegration(this.urlFor, this.request);
     };
   }
 }
