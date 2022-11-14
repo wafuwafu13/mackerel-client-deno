@@ -19,6 +19,15 @@ import {
   UpdateAWSIntegrationParam,
   updateAwsIntegrationSettings,
 } from "./awsintegrations.ts";
+import {
+  createDashboards,
+  Dashboard,
+  deleteDashboards,
+  getDashboards,
+  listDashboards,
+  updateDashboards,
+  Widget,
+} from "./dashboards.ts";
 
 export const defaultBaseURL = "https://api.mackerelio.com/";
 
@@ -38,7 +47,7 @@ type ErrorType = {
 export type PayloadType =
   | Record<
     never | string,
-    never | string | number | null | AWSIntegrationServices
+    never | string | number | null | AWSIntegrationServices | Widget[]
   >
   | null;
 
@@ -116,6 +125,26 @@ export namespace Mackerel {
 
     deleteService = (serviceName: string): Promise<Service> => {
       return deleteService(serviceName, this.urlFor, this.request);
+    };
+
+    createDashboards = (param: Dashboard) => {
+      return createDashboards(param, this.postJSON);
+    };
+
+    getDashboards = (dashboardID: string) => {
+      return getDashboards(dashboardID, this.urlFor, this.request);
+    };
+
+    updateDashboards = (dashboardID: string, param: Dashboard) => {
+      return updateDashboards(dashboardID, param, this.putJSON);
+    };
+
+    deleteDashboards = (dashboardID: string) => {
+      return deleteDashboards(dashboardID, this.urlFor, this.request);
+    };
+
+    listDashboards = () => {
+      return listDashboards(this.urlFor, this.request);
     };
 
     listAwsIntegrationSettings = (): Promise<AWSIntegration[]> => {
